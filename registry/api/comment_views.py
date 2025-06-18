@@ -8,6 +8,8 @@ class CommentSerializer(serializers.ModelSerializer):
   event = EventSimpleSerializer(read_only=True)
   event_id = serializers.PrimaryKeyRelatedField(queryset=Event.objects.all(), write_only=True)
   
+  poster = serializers.PrimaryKeyRelatedField(read_only=True)
+  
   class Meta:
     model = Comment
     fields = ('id', 'event', 'event_id', 'poster', 'text', 'posttime')

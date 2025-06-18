@@ -5,9 +5,11 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticate
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.exceptions import PermissionDenied
+from django.db import models
 
 class EventSerializer(serializers.ModelSerializer):
   comments = CommentSimpleSerializer(many=True, read_only=True)
+  owner = serializers.PrimaryKeyRelatedField(read_only=True)
   
   class Meta:
     model = Event
@@ -18,7 +20,12 @@ class EventViewSet(viewsets.ModelViewSet):
   permission_classes = [IsAuthenticatedOrReadOnly]
   
   def get_queryset(self):
-    return Event.objects.filter(private=False).order_by('-datetime')
+    user = self.request.user
+    if user.is_authenticated:
+      return Event.objects.filter(
+        models.Q(private=False) | models.Q(owner=user)
+      )
+    return Event.objects.filter(private=False)
   
   def perform_create(self, serializer):
     serializer.save(owner=self.request.user)
