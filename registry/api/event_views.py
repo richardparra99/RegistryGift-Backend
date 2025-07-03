@@ -10,6 +10,7 @@ from django.db import models
 class EventSerializer(serializers.ModelSerializer):
   comments = CommentSimpleSerializer(many=True, read_only=True)
   owner = serializers.PrimaryKeyRelatedField(read_only=True)
+  datetime = serializers.DateTimeField(error_messages={'invalid': 'La fecha tiene un formato incorrecto. Ejemplo de formato válido: 2025-07-01T18:00:00Z'})
   
   class Meta:
     model = Event

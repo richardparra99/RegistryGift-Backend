@@ -1,7 +1,7 @@
 from rest_framework import viewsets, serializers, status
 from registry.models import Gift, Event
 from registry.api import EventSimpleSerializer
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.exceptions import PermissionDenied
@@ -46,7 +46,7 @@ class GiftViewSet(viewsets.ModelViewSet):
       raise PermissionDenied({'error': 'You are not the event owner'})
     instance.delete()
     
-  @action(detail=True, methods=['post'], url_path='reserve')
+  @action(detail=True, methods=['post'], url_path='reserve', permission_classes=[AllowAny])
   def reserve(self, request, pk=None):
     gift = self.get_object()
     

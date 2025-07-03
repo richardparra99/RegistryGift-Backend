@@ -1,7 +1,7 @@
 from rest_framework import viewsets, serializers
 from registry.models import Comment, Event
 from registry.api import EventSimpleSerializer
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
 from rest_framework.exceptions import PermissionDenied
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -16,7 +16,11 @@ class CommentSerializer(serializers.ModelSerializer):
 
 class CommentViewSet(viewsets.ModelViewSet):
   serializer_class = CommentSerializer
-  permission_classes = [IsAuthenticatedOrReadOnly]
+  
+  def get_permissions(self):
+    if self.action == 'create':
+      return [AllowAny()]
+    return [IsAuthenticatedOrReadOnly()]
   
   def get_queryset(self):
     event_id = self.request.query_params.get('event_id')
