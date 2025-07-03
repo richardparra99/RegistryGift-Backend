@@ -30,20 +30,20 @@ class GiftViewSet(viewsets.ModelViewSet):
     try:
       event = Event.objects.get(id=event_id)
     except Event.DoesNotExist:
-      raise serializers.ValidationError({'event_id': 'Event does not exist'})
+      raise serializers.ValidationError({'event_id': 'Este Evento no existe'})
     if event.owner != self.request.user:
-      raise PermissionDenied({'error': 'You are not the event owner'})
+      raise PermissionDenied({'error': 'Este evento no te pertenece.'})
     serializer.save(event_id=self.request.data.get('event_id'))
     
   def perform_update(self, serializer):
     event = self.get_object().event
     if event.owner != self.request.user:
-      raise PermissionDenied({'error': 'You are not the event owner'})
+      raise PermissionDenied({'error': 'Este evento no te pertenece.'})
     serializer.save()
     
   def perform_destroy(self, instance):
     if instance.event.owner != self.request.user:
-      raise PermissionDenied({'error': 'You are not the event owner'})
+      raise PermissionDenied({'error': 'Este evento no te pertenece.'})
     instance.delete()
     
   @action(detail=True, methods=['post'], url_path='reserve', permission_classes=[AllowAny])
@@ -51,7 +51,7 @@ class GiftViewSet(viewsets.ModelViewSet):
     gift = self.get_object()
     
     if gift.reserved:
-      return Response({'error': 'Gift already reserved'}, status=status.HTTP_400_BAD_REQUEST)
+      return Response({'error': 'Este regalo ya está reservado.'}, status=status.HTTP_400_BAD_REQUEST)
     
     if request.user.is_authenticated:
       gift.reserved_by = request.user
@@ -60,4 +60,4 @@ class GiftViewSet(viewsets.ModelViewSet):
     
     gift.reserved = True  
     gift.save()
-    return Response({'message': 'Reservation successful'}, status=status.HTTP_200_OK)
+    return Response({'message': 'Reserva exitosa.'}, status=status.HTTP_200_OK)

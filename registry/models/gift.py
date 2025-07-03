@@ -5,9 +5,9 @@ from registry.models import Event
 
 class Gift(models.Model):
   PRIORITIES = [
-    ('high', 'High'),
-    ('medium', 'Medium'),
-    ('low', 'Low'),
+    ('high', 'Alto'),
+    ('medium', 'Mediano'),
+    ('low', 'Bajo'),
   ]
   
   event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='gifts')

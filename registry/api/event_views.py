@@ -34,12 +34,12 @@ class EventViewSet(viewsets.ModelViewSet):
   def perform_update(self, serializer):
     event = self.get_object()
     if event.owner != self.request.user:
-      raise PermissionDenied({'error': 'You are not the event owner'})
+      raise PermissionDenied({'error': 'Este evento no te pertenece.'})
     serializer.save()
     
   def perform_destroy(self, instance):
     if instance.owner != self.request.user:
-      raise PermissionDenied({'error': 'You are not the event owner'})
+      raise PermissionDenied({'error': 'Este evento no te pertenece.'})
     instance.delete()
   
   @action(detail=False, methods=['get'], url_path='my', permission_classes=[IsAuthenticated])

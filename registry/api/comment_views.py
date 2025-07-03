@@ -37,7 +37,7 @@ class CommentViewSet(viewsets.ModelViewSet):
   def perform_update(self, serializer):
     comment = self.get_object()
     if comment.poster != self.request.user:
-      raise PermissionDenied({'error': 'You did not post this comment'})
+      raise PermissionDenied({'error': 'Este comentario no te pertenece.'})
     serializer.save()
     
   def perform_destroy(self, request, *args, **kwargs):
@@ -46,4 +46,4 @@ class CommentViewSet(viewsets.ModelViewSet):
     
     if comment.poster == user or (comment.event.owner == user):
       return super().destroy(request, *args, **kwargs)
-    raise PermissionDenied({'error': 'You are not the event owner or comment poster'})
+    raise PermissionDenied({'error': 'No eres el propietario del evento ni el autor del comentario.'})
