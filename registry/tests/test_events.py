@@ -17,6 +17,7 @@ class EventAPITestCase(APITestCase):
         description="Evento publico de unit_user",
         datetime="2025-07-01T18:00:00Z",
         type="birthday",
+        color="red",
         private=False
       ),
       "otro_publico": Event.objects.create(
@@ -25,6 +26,7 @@ class EventAPITestCase(APITestCase):
         description="Evento publico de otro_unit_user",
         datetime="2025-07-02T18:00:00Z",
         type="wedding",
+        color="blue",
         private=False
       ),
       "mi_privado": Event.objects.create(
@@ -33,6 +35,7 @@ class EventAPITestCase(APITestCase):
         description="Evento privado de unit_user",
         datetime="2025-07-03T18:00:00Z",
         type="anniversary",
+        color="green",
         private=True
       ),
       "otro_privado": Event.objects.create(
@@ -41,6 +44,7 @@ class EventAPITestCase(APITestCase):
         description="Evento privado de otro_unit_user",
         datetime="2025-07-04T18:00:00Z",
         type="other",
+        color="purple",
         private=True
       ),
     }
@@ -83,6 +87,7 @@ class EventAPITestCase(APITestCase):
       "description": "Un evento nuevo",
       "datetime": "2025-08-01T18:00:00Z",
       "type": "wedding",
+      "color": "orange",
       "private": False
     }
     response = self.client.post('/api/events/', data, format='json')
@@ -94,11 +99,12 @@ class EventAPITestCase(APITestCase):
   def test_actualizar_evento_propio(self):
     self.authenticate()
     event_id = self.events["mi_publico"].id
-    data = {"name": "Evento Actualizado"}
+    data = {"name": "Evento Actualizado", "color": "orange"}
     response = self.client.patch(f'/api/events/{event_id}/', data, format='json')
     self.assertEqual(response.status_code, status.HTTP_200_OK)
     self.events["mi_publico"].refresh_from_db()
     self.assertEqual(self.events["mi_publico"].name, "Evento Actualizado")
+    self.assertEqual(self.events["mi_publico"].color, "orange")
 
   #  PATCH /api/events/<id>/ para actualizar un evento ajeno, debe denegar la actualización
   def test_actualizar_evento_ajeno(self):

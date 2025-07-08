@@ -1,6 +1,6 @@
 from rest_framework import viewsets, serializers
 from registry.models import Event
-from registry.api import CommentSimpleSerializer
+from registry.api import CommentSimpleSerializer, UserSimpleSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -9,12 +9,12 @@ from django.db import models
 
 class EventSerializer(serializers.ModelSerializer):
   comments = CommentSimpleSerializer(many=True, read_only=True)
-  owner = serializers.PrimaryKeyRelatedField(read_only=True)
+  owner = UserSimpleSerializer(read_only=True)
   datetime = serializers.DateTimeField(error_messages={'invalid': 'La fecha tiene un formato incorrecto. Ejemplo de formato válido: 2025-07-01T18:00:00Z'})
   
   class Meta:
     model = Event
-    fields = ('id', 'name', 'description', 'datetime', 'type', 'private', 'owner', 'comments')
+    fields = ('id', 'name', 'description', 'datetime', 'type', 'color', 'private', 'owner', 'comments')
     
 class EventViewSet(viewsets.ModelViewSet):
   serializer_class = EventSerializer

@@ -1,6 +1,6 @@
 from rest_framework import viewsets, serializers, status
 from registry.models import Gift, Event
-from registry.api import EventSimpleSerializer
+from registry.api import EventSimpleSerializer, UserSimpleSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -10,6 +10,7 @@ class GiftSerializer(serializers.ModelSerializer):
   event = EventSimpleSerializer(read_only=True)
   event_id = serializers.PrimaryKeyRelatedField(queryset=Event.objects.all(), write_only=True)
   
+  reserved_by = UserSimpleSerializer(read_only=True)
   
   class Meta:
     model = Gift

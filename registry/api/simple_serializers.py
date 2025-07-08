@@ -2,10 +2,15 @@ from rest_framework import serializers
 from registry.models import Event, Comment, Gift
 from django.contrib.auth.models import User
 
+class UserSimpleSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = User
+    fields = ('id', 'username')
+
 class EventSimpleSerializer(serializers.ModelSerializer):
   class Meta:
     model = Event
-    fields = fields = ('id', 'name', 'type', 'datetime', 'private')
+    fields = '__all__'
     
 class CommentSimpleSerializer(serializers.ModelSerializer):
   class Meta:

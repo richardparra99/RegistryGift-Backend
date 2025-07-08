@@ -1,6 +1,6 @@
 from rest_framework import viewsets, serializers
 from registry.models import Comment, Event
-from registry.api import EventSimpleSerializer
+from registry.api import EventSimpleSerializer, UserSimpleSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny
 from rest_framework.exceptions import PermissionDenied
 
@@ -8,7 +8,7 @@ class CommentSerializer(serializers.ModelSerializer):
   event = EventSimpleSerializer(read_only=True)
   event_id = serializers.PrimaryKeyRelatedField(queryset=Event.objects.all(), write_only=True)
   
-  poster = serializers.PrimaryKeyRelatedField(read_only=True)
+  poster = UserSimpleSerializer(read_only=True)
   
   class Meta:
     model = Comment
@@ -40,7 +40,7 @@ class CommentViewSet(viewsets.ModelViewSet):
       raise PermissionDenied({'error': 'Este comentario no te pertenece.'})
     serializer.save()
     
-  def perform_destroy(self, request, *args, **kwargs):
+  def destroy(self, request, *args, **kwargs):
     comment = self.get_object()
     user = request.user
     
