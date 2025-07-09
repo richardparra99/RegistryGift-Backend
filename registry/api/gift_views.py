@@ -15,6 +15,11 @@ class GiftSerializer(serializers.ModelSerializer):
   class Meta:
     model = Gift
     fields = ('id', 'event', 'event_id', 'name', 'description', 'quantity', 'reference_link', 'priority', 'reserved_by', 'reserved')
+  
+  def validate_quantity(self, value):
+        if value < 1:
+            raise serializers.ValidationError("La cantidad debe ser mayor o igual a 1.")
+        return value
 
 class GiftViewSet(viewsets.ModelViewSet):
   serializer_class = GiftSerializer

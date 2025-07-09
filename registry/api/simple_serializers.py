@@ -21,3 +21,8 @@ class GiftSimpleSerializer(serializers.ModelSerializer):
   class Meta:
     model = Gift
     fields = '__all__'
+
+  def validate_quantity(self, value):
+      if value < 1:
+          raise serializers.ValidationError("La cantidad debe ser mayor o igual a 1.")
+      return value
