@@ -15,6 +15,11 @@ class Event(models.Model):
       ('green', 'Verde'),
       ('orange', 'Naranja'),
       ('purple', 'Morado'),
+      ('yellow', 'Amarillo'),
+      ('pink', 'Rosa'),
+      ('gray', 'Gris'),
+      ('teal', 'Turquesa'),
+      ('brown', 'Marrón'),
   ]
   
   owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='events')
